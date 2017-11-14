@@ -10,37 +10,35 @@ function Square(props) {
     );
 }
 
-class Board extends React.Component {
-    render() {
-        const renderSquare = (i) => {
-            return (
-                <Square
-                    value={this.props.squares[i]}
-                    onClick={() => this.props.onClick(i)}
-                />
-            );
-        };
-
+function Board(props) {
+    const renderSquare = i => {
         return (
-            <div>
-                <div className="board-row">
-                    {renderSquare(0)}
-                    {renderSquare(1)}
-                    {renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {renderSquare(3)}
-                    {renderSquare(4)}
-                    {renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {renderSquare(6)}
-                    {renderSquare(7)}
-                    {renderSquare(8)}
-                </div>
-            </div>
+            <Square
+                value={props.squares[i]}
+                onClick={() => props.onClick(i)}
+            />
         );
-    }
+    };
+
+    return (
+        <div>
+            <div className="board-row">
+                {renderSquare(0)}
+                {renderSquare(1)}
+                {renderSquare(2)}
+            </div>
+            <div className="board-row">
+                {renderSquare(3)}
+                {renderSquare(4)}
+                {renderSquare(5)}
+            </div>
+            <div className="board-row">
+                {renderSquare(6)}
+                {renderSquare(7)}
+                {renderSquare(8)}
+            </div>
+        </div>
+    );
 }
 
 class Game extends React.Component {
@@ -58,10 +56,13 @@ class Game extends React.Component {
         return this.state.xIsNext ? 'X' : 'O';
     }
 
-    handleClick(i) {
+    current() {
         const history = this.state.history;
-        const current = history[history.length - 1];
-        const squares = current.squares.slice();
+        return history[history.length - 1];
+    }
+
+    handleClick(i) {
+        const squares = this.current().squares.slice();
 
         if (squares[i] || winner(squares)) {
             return;
@@ -74,27 +75,36 @@ class Game extends React.Component {
         });
     }
 
-    render() {
-        const history = this.state.history;
-        const current = history[history.length - 1];
-        const w = winner(current.squares);
+    jumpTo(move) {
+        // TODO
+    }
 
-        const status = (() => {
-            if (w) {
-                return `Winner: ${w}`;
-            } else {
-                return `Next player: ${this.nextPlayer()}`;
-            }
-        })();
+    render() {
+        const w = winner(this.current().squares);
+        const status = w ?
+            `Winner: ${w}` :
+            `Next player: ${this.nextPlayer()}`;
+
+        const description = i => i > 0 ?
+            `Go to move #${i}` :
+            'Go to start';
+
+        const moves = this.state.history.map((x, i) => {
+            return (
+                <li key={i.toString()}>
+                    <button onClick={() => this.jumpTo(x)}>{description(i)}</button>
+                </li>
+            );
+        });
 
         return (
             <div className="game">
                 <div className="game-board">
-                    <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
+                    <Board squares={this.current().squares} onClick={i => this.handleClick(i)} />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{ /* TODO */}</ol>
+                    <ol>{moves}</ol>
                 </div>
             </div>
         );
