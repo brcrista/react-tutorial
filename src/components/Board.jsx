@@ -12,7 +12,7 @@ export function Board(props) {
     };
 
     return (
-        <div>
+        <div className="game-board">
             <div className="board-row">
                 {renderSquare(0)}
                 {renderSquare(1)}

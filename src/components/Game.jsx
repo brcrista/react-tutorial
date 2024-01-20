@@ -67,9 +67,7 @@ export function Game() {
 
     return (
         <div className="game">
-            <div className="game-board">
-                <Board squares={current.squares} onClick={handleClick} />
-            </div>
+            <Board squares={current.squares} onClick={handleClick} />
             <div className="game-info">
                 <div>{status}</div>
                 <ol>{moves}</ol>
