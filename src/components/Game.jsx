@@ -17,13 +17,13 @@ function checkWinner(squares) {
         [2, 4, 6],
     ];
 
-    for (const [a, b, c] of lines) {
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
-        }
+    function winner([i, j, k]) {
+        const allSame = squares[i] === squares[j] && squares[j] === squares[k];
+        const player = squares[i];
+        return allSame && player;
     }
 
-    return null;
+    return lines.map(winner).find(x => x) || null;
 }
 
 export function Game() {
