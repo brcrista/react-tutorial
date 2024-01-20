@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Board } from "./Board";
 import { GameInfo } from "./GameInfo";
 
-function winner(squares) {
+function checkWinner(squares) {
     const lines = [
         // rows
         [0, 1, 2],
@@ -30,32 +30,31 @@ export function Game() {
     const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
     const [moveNumber, setMoveNumber] = useState(0);
 
-    const nextPlayer = () => moveNumber % 2 === 0 ? "X" : "O";
+    const nextMove = () => moveNumber % 2 === 0 ? "X" : "O";
 
     function handleSquareClick(i) {
         const subhistory = history.slice(0, moveNumber + 1);
-        const current = subhistory[subhistory.length - 1];
-        const squares = current.squares.slice();
+        const currentGameState = subhistory[subhistory.length - 1];
+        const squares = currentGameState.squares.slice();
 
-        if (squares[i] || winner(squares)) {
+        if (squares[i] || checkWinner(squares)) {
             return;
         }
 
-        squares[i] = nextPlayer();
-        setHistory(subhistory.concat([{squares: squares}]));
+        squares[i] = nextMove();
+        setHistory(subhistory.concat([{ squares }]));
         setMoveNumber(moveNumber + 1);
     }
 
-    const current = history[moveNumber];
-
-    const w = winner(current.squares);
-    const status = w
-        ? `Winner: ${w}`
-        : `Next player: ${nextPlayer()}`;
+    const currentGameState = history[moveNumber];
+    const winner = checkWinner(currentGameState.squares);
+    const status = winner
+        ? `Winner: ${winner}`
+        : `Next move: ${nextMove()}`;
 
     return (
         <div className="game">
-            <Board squares={current.squares} onClick={handleSquareClick} />
+            <Board squares={currentGameState.squares} onClick={handleSquareClick} />
             <GameInfo status={status} history={history} setMoveNumber={setMoveNumber} />
         </div>
     );
