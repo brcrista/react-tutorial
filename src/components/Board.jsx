@@ -1,12 +1,5 @@
 import * as React from 'react';
-
-function Square(props) {
-    return (
-        <button className="square" onClick={props.onClick}>
-            {props.value}
-        </button>
-    );
-}
+import { Square } from './Square';
 
 export function Board(props) {
     const renderSquare = i => {
