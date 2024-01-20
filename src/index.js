@@ -1,9 +1,6 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { Game } from './components/Game';
-import './index.css';
+import { createRoot } from "react-dom/client";
+import { Game } from "./components/Game";
+import "./index.css";
 
-ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-);
+const root = createRoot(document.getElementById("root"));
+root.render(<Game />);
