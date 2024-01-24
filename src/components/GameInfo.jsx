@@ -1,4 +1,4 @@
-export function GameInfo({ status, moves }) {
+export default function GameInfo({ status, moves }) {
     return (
         <div className="game-info">
             <div>{status}</div>

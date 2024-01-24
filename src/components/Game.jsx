@@ -1,6 +1,6 @@
 import { useReducer } from "react";
-import { Board } from "./Board";
-import { GameInfo } from "./GameInfo";
+import Board from "./Board";
+import GameInfo from "./GameInfo";
 
 function checkWinner(squares) {
     const lines = [
@@ -57,7 +57,7 @@ function gameReducer(state, action) {
     }
 }
 
-export function Game() {
+export default function Game() {
     const initialState = {
         moveNumber: 0,
         history: [{ squares: Array(9).fill(null) }],

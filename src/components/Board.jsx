@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Square } from './Square';
+import Square from './Square';
 
-export function Board(props) {
+export default function Board(props) {
     const renderSquare = i => {
         return (
             <Square
