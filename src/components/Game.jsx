@@ -52,10 +52,21 @@ export function Game() {
         ? `Winner: ${winner}`
         : `Next move: ${nextMove()}`;
 
+    const moves = history.map((_, i) => {
+        const description = i > 0
+            ? `Go to move #${i}`
+            : "Go to start";
+        return (
+            <li key={i.toString()}>
+                <button onClick={() => setMoveNumber(i)}>{description}</button>
+            </li>
+        );
+    });
+
     return (
         <div className="game">
             <Board squares={currentGameState.squares} onClick={handleSquareClick} />
-            <GameInfo status={status} history={history} setMoveNumber={setMoveNumber} />
+            <GameInfo status={status} moves={moves} />
         </div>
     );
 }
