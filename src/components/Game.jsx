@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import { Board } from "./Board";
 import { GameInfo } from "./GameInfo";
 
@@ -26,43 +26,66 @@ function checkWinner(squares) {
     return lines.map(winner).find(x => x) || null;
 }
 
-export function Game() {
-    const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
-    const [moveNumber, setMoveNumber] = useState(0);
+function gameReducer(state, action) {
+    switch (action.type) {
+        case "square_click": {
+            const { moveNumber, history } = state;
+            const i = action.squareIndex;
 
-    const nextMove = () => moveNumber % 2 === 0 ? "X" : "O";
+            const subhistory = history.slice(0, moveNumber + 1);
+            const currentGameState = subhistory[subhistory.length - 1];
+            const squares = currentGameState.squares.slice();
 
-    function handleSquareClick(i) {
-        const subhistory = history.slice(0, moveNumber + 1);
-        const currentGameState = subhistory[subhistory.length - 1];
-        const squares = currentGameState.squares.slice();
+            if (squares[i] || checkWinner(squares)) {
+                return state;
+            }
 
-        if (squares[i] || checkWinner(squares)) {
-            return;
+            const nextMove = moveNumber % 2 === 0 ? "X" : "O";
+            squares[i] = nextMove;
+            return {
+                moveNumber: state.moveNumber + 1,
+                history: subhistory.concat([{ squares }])
+            };
         }
-
-        squares[i] = nextMove();
-        setHistory(subhistory.concat([{ squares }]));
-        setMoveNumber(moveNumber + 1);
+        case "history_click":
+            return {
+                ...state,
+                moveNumber: action.moveNumber
+            };
+        default:
+            return state;
     }
+}
+
+export function Game() {
+    const initialState = {
+        moveNumber: 0,
+        history: [{ squares: Array(9).fill(null) }],
+    };
+    const [state, dispatch] = useReducer(gameReducer, initialState);
+    const { moveNumber, history } = state;
 
     const currentGameState = history[moveNumber];
     const winner = checkWinner(currentGameState.squares);
+    const nextMove = moveNumber % 2 === 0 ? "X" : "O";
     const status = winner
         ? `Winner: ${winner}`
-        : `Next move: ${nextMove()}`;
+        : `Next move: ${nextMove}`;
 
     const moves = history.map((_, i) => {
+        const handleHistoryClick = () => dispatch({ type: "history_click", moveNumber: i });
         const description = i > 0
             ? `Go to move #${i}`
             : "Go to start";
+
         return (
             <li key={i.toString()}>
-                <button onClick={() => setMoveNumber(i)}>{description}</button>
+                <button onClick={handleHistoryClick}>{description}</button>
             </li>
         );
     });
 
+    const handleSquareClick = squareIndex => dispatch({ type: "square_click", squareIndex });
     return (
         <div className="game">
             <Board squares={currentGameState.squares} onClick={handleSquareClick} />
