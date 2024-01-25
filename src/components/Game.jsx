@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import Board from "./Board";
 import GameInfo from "./GameInfo";
+import MoveList from "./MoveList";
 
 function checkWinner(squares) {
     const lines = [
@@ -85,7 +86,9 @@ export default function Game() {
     return (
         <div className="game">
             <Board squares={currentSquares} onClick={handleSquareClick} />
-            <GameInfo status={status} history={history} onHistoryClick={handleHistoryClick} />
+            <GameInfo status={status}>
+                <MoveList history={history} onHistoryClick={handleHistoryClick} />
+            </GameInfo>
         </div>
     );
 }

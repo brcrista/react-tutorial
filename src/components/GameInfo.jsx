@@ -1,10 +1,8 @@
-import MoveList from "./MoveList";
-
-export default function GameInfo({ status, history, onHistoryClick }) {
+export default function GameInfo({ status, children }) {
     return (
         <div className="game-info">
             <div>{status}</div>
-            <MoveList history={history} onHistoryClick={onHistoryClick} />
+            {children}
         </div>
     );
 }
