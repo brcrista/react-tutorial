@@ -28,30 +28,36 @@ function checkWinner(squares) {
 
 function gameReducer(state, action) {
     switch (action.type) {
-        case "square_click": {
-            const { moveNumber, history } = state;
-            const i = action.squareIndex;
-
-            const subhistory = history.slice(0, moveNumber + 1);
-            const currentGameState = subhistory[subhistory.length - 1];
-            const squares = currentGameState.squares.slice();
-
-            if (squares[i] || checkWinner(squares)) {
-                return state;
-            }
-
-            const nextMove = moveNumber % 2 === 0 ? "X" : "O";
-            squares[i] = nextMove;
-            return {
-                moveNumber: state.moveNumber + 1,
-                history: subhistory.concat([{ squares }])
-            };
-        }
         case "history_click":
             return {
                 ...state,
                 moveNumber: action.moveNumber
             };
+        case "square_click": {
+            const { moveNumber, history } = state;
+            const currentSquares = history[moveNumber];
+
+            const isOccupied = !!currentSquares[action.squareIndex];
+            const isGameOver = checkWinner(currentSquares);
+            if (isOccupied || isGameOver) {
+                return state;
+            }
+
+            // Break off history from the point currently being shown.
+            // This may not be the latest move if a "Go to ..." button was clicked.
+            const newHistory = history.slice(0, moveNumber + 1);
+            const newSquares = [...currentSquares];
+            newHistory.push(newSquares);
+
+            // Update the square with the next move.
+            const nextMove = moveNumber % 2 === 0 ? "X" : "O";
+            newSquares[action.squareIndex] = nextMove;
+
+            return {
+                moveNumber: state.moveNumber + 1,
+                history: newHistory
+            };
+        }
         default:
             return state;
     }
@@ -60,13 +66,13 @@ function gameReducer(state, action) {
 export default function Game() {
     const initialState = {
         moveNumber: 0,
-        history: [{ squares: Array(9).fill(null) }],
+        history: [Array(9).fill(null)],
     };
     const [state, dispatch] = useReducer(gameReducer, initialState);
     const { moveNumber, history } = state;
 
-    const currentGameState = history[moveNumber];
-    const winner = checkWinner(currentGameState.squares);
+    const currentSquares = history[moveNumber];
+    const winner = checkWinner(currentSquares);
     const nextMove = moveNumber % 2 === 0 ? "X" : "O";
     const status = winner
         ? `Winner: ${winner}`
@@ -88,7 +94,7 @@ export default function Game() {
     const handleSquareClick = squareIndex => dispatch({ type: "square_click", squareIndex });
     return (
         <div className="game">
-            <Board squares={currentGameState.squares} onClick={handleSquareClick} />
+            <Board squares={currentSquares} onClick={handleSquareClick} />
             <GameInfo status={status} moves={moves} />
         </div>
     );
