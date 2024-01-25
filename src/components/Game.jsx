@@ -32,19 +32,19 @@ function gameReducer(state, action) {
             const { moveNumber, history } = state;
             const i = action.squareIndex;
 
-            const subhistory = history.slice(0, moveNumber + 1);
-            const currentGameState = subhistory[subhistory.length - 1];
-            const squares = currentGameState.squares.slice();
+            const newHistory = history.slice(0, moveNumber + 1);
+            const currentSquares = newHistory[newHistory.length - 1];
+            const newSquares = currentSquares.slice();
 
-            if (squares[i] || checkWinner(squares)) {
+            if (newSquares[i] || checkWinner(newSquares)) {
                 return state;
             }
 
             const nextMove = moveNumber % 2 === 0 ? "X" : "O";
-            squares[i] = nextMove;
+            newSquares[i] = nextMove;
             return {
                 moveNumber: state.moveNumber + 1,
-                history: subhistory.concat([{ squares }])
+                history: newHistory.concat([newSquares])
             };
         }
         case "history_click":
@@ -60,13 +60,13 @@ function gameReducer(state, action) {
 export default function Game() {
     const initialState = {
         moveNumber: 0,
-        history: [{ squares: Array(9).fill(null) }],
+        history: [Array(9).fill(null)],
     };
     const [state, dispatch] = useReducer(gameReducer, initialState);
     const { moveNumber, history } = state;
 
-    const currentGameState = history[moveNumber];
-    const winner = checkWinner(currentGameState.squares);
+    const currentSquares = history[moveNumber];
+    const winner = checkWinner(currentSquares);
     const nextMove = moveNumber % 2 === 0 ? "X" : "O";
     const status = winner
         ? `Winner: ${winner}`
@@ -88,7 +88,7 @@ export default function Game() {
     const handleSquareClick = squareIndex => dispatch({ type: "square_click", squareIndex });
     return (
         <div className="game">
-            <Board squares={currentGameState.squares} onClick={handleSquareClick} />
+            <Board squares={currentSquares} onClick={handleSquareClick} />
             <GameInfo status={status} moves={moves} />
         </div>
     );
