@@ -35,24 +35,23 @@ function gameReducer(state, action) {
             };
         case "square_click": {
             const { moveNumber, history } = state;
-            const i = action.squareIndex;
-
             const currentSquares = history[moveNumber];
 
-            const isOccupied = !!currentSquares[i];
+            const isOccupied = !!currentSquares[action.squareIndex];
             const isGameOver = checkWinner(currentSquares);
             if (isOccupied || isGameOver) {
                 return state;
             }
 
-            // Break off history at the current move.
+            // Break off history from the point currently being shown.
             // This may not be the latest move if a "Go to ..." button was clicked.
             const newHistory = history.slice(0, moveNumber + 1);
             const newSquares = [...currentSquares];
             newHistory.push(newSquares);
 
+            // Update the square with the next move.
             const nextMove = moveNumber % 2 === 0 ? "X" : "O";
-            newSquares[i] = nextMove;
+            newSquares[action.squareIndex] = nextMove;
 
             return {
                 moveNumber: state.moveNumber + 1,
