@@ -37,19 +37,26 @@ function gameReducer(state, action) {
             const { moveNumber, history } = state;
             const i = action.squareIndex;
 
-            const newHistory = history.slice(0, moveNumber + 1);
-            const currentSquares = newHistory[newHistory.length - 1];
-            const newSquares = currentSquares.slice();
+            const currentSquares = history[moveNumber];
 
-            if (newSquares[i] || checkWinner(newSquares)) {
+            const isOccupied = !!currentSquares[i];
+            const isGameOver = checkWinner(currentSquares);
+            if (isOccupied || isGameOver) {
                 return state;
             }
 
+            // Break off history at the current move.
+            // This may not be the latest move if a "Go to ..." button was clicked.
+            const newHistory = history.slice(0, moveNumber + 1);
+            const newSquares = [...currentSquares];
+            newHistory.push(newSquares);
+
             const nextMove = moveNumber % 2 === 0 ? "X" : "O";
             newSquares[i] = nextMove;
+
             return {
                 moveNumber: state.moveNumber + 1,
-                history: newHistory.concat([newSquares])
+                history: newHistory
             };
         }
         default:
