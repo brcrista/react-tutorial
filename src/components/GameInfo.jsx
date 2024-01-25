@@ -1,8 +1,8 @@
-export default function GameInfo({ status, moves }) {
+export default function GameInfo({ status, children }) {
     return (
         <div className="game-info">
             <div>{status}</div>
-            <ol>{moves}</ol>
+            {children}
         </div>
     );
 }
