@@ -64,6 +64,14 @@ function gameReducer(state, action) {
     }
 }
 
+function status(squares, moveNumber) {
+    const winner = checkWinner(squares);
+    const nextMove = moveNumber % 2 === 0 ? "X" : "O";
+    return winner
+        ? `Winner: ${winner}`
+        : `Next move: ${nextMove}`;
+}
+
 export default function Game() {
     const initialState = {
         moveNumber: 0,
@@ -73,20 +81,13 @@ export default function Game() {
     const { moveNumber, history } = state;
 
     const currentSquares = history[moveNumber];
-    const winner = checkWinner(currentSquares);
-    const nextMove = moveNumber % 2 === 0 ? "X" : "O";
-    const status = winner
-        ? `Winner: ${winner}`
-        : `Next move: ${nextMove}`;
-
-
     const handleSquareClick = squareIndex => dispatch({ type: "square_click", squareIndex });
     const handleHistoryClick = moveNumber => dispatch({ type: "history_click", moveNumber });
 
     return (
         <div className="game">
             <Board squares={currentSquares} onClick={handleSquareClick} />
-            <GameInfo status={status}>
+            <GameInfo status={status(currentSquares, moveNumber)}>
                 <MoveList history={history} onHistoryClick={handleHistoryClick} />
             </GameInfo>
         </div>
