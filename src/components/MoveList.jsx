@@ -5,7 +5,7 @@ export default function MoveList({ history, onHistoryClick }) {
             : "Go to start";
 
         return (
-            <li key={i.toString()}>
+            <li key={i}>
                 <button onClick={() => onHistoryClick(i)}>{description}</button>
             </li>
         );
