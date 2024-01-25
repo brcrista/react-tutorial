@@ -78,24 +78,14 @@ export default function Game() {
         ? `Winner: ${winner}`
         : `Next move: ${nextMove}`;
 
-    const moves = history.map((_, i) => {
-        const handleHistoryClick = () => dispatch({ type: "history_click", moveNumber: i });
-        const description = i > 0
-            ? `Go to move #${i}`
-            : "Go to start";
-
-        return (
-            <li key={i.toString()}>
-                <button onClick={handleHistoryClick}>{description}</button>
-            </li>
-        );
-    });
 
     const handleSquareClick = squareIndex => dispatch({ type: "square_click", squareIndex });
+    const handleHistoryClick = moveNumber => dispatch({ type: "history_click", moveNumber });
+
     return (
         <div className="game">
             <Board squares={currentSquares} onClick={handleSquareClick} />
-            <GameInfo status={status} moves={moves} />
+            <GameInfo status={status} history={history} onHistoryClick={handleHistoryClick} />
         </div>
     );
 }
