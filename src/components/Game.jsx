@@ -28,6 +28,11 @@ function checkWinner(squares) {
 
 function gameReducer(state, action) {
     switch (action.type) {
+        case "history_click":
+            return {
+                ...state,
+                moveNumber: action.moveNumber
+            };
         case "square_click": {
             const { moveNumber, history } = state;
             const i = action.squareIndex;
@@ -47,11 +52,6 @@ function gameReducer(state, action) {
                 history: newHistory.concat([newSquares])
             };
         }
-        case "history_click":
-            return {
-                ...state,
-                moveNumber: action.moveNumber
-            };
         default:
             return state;
     }
