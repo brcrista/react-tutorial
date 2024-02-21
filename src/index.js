@@ -4,5 +4,4 @@ import Game from "./components/Game";
 import "./index.css";
 
 const root = createRoot(document.getElementById("root"));
-// root.render(<StrictMode><Game /></StrictMode>);
-root.render(<Game />);
+root.render(<StrictMode><Game /></StrictMode>);

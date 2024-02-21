@@ -15,21 +15,34 @@ ol, ul {
     display: table;
 }
 
-.status {
-    margin-bottom: 10px;
+.game {
+    --square-size: 64px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.game-board {
+    margin-bottom: calc(3 * var(--square-size) / 8);
+    margin-top: calc(3 * var(--square-size));
+}
+
+.game-info {
+    font-size: calc(3 * var(--square-size) / 8);
 }
 
 .square {
     background: #fff;
     border: 1px solid #999;
     float: left;
-    font-size: 24px;
+    font-size: calc(3 * var(--square-size) / 4);
     font-weight: bold;
-    line-height: 34px;
-    height: 34px;
+    line-height: var(--square-size);
+    height: var(--square-size);
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 34px;
+    width: var(--square-size);
 }
